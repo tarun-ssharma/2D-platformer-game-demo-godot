@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/coin/gold_1.png" type="Texture" id=1]
+[ext_resource path="res://assets/coin/gold_3.png" type="Texture" id=2]
+[ext_resource path="res://assets/coin/gold_2.png" type="Texture" id=3]
+[ext_resource path="res://coin.gd" type="Script" id=4]
+[ext_resource path="res://assets/sounds/powerUp2.ogg" type="AudioStream" id=5]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 88.0
+height = 28.0
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "rotate",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "spin",
+"speed": 5.0
+} ]
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -2.6226e-06, -2.14577e-06 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "bounce"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("AnimatedSprite:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( -2.6226e-06, -2.14577e-06 ), Vector2( -2.27374e-13, -160 ), Vector2( 0, -32 ) ]
+}
+
+[node name="Coin" type="Area2D"]
+collision_layer = 8
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2( 0.25, 0.25 )
+shape = SubResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -2.6226e-06, -2.14577e-06 )
+scale = Vector2( 0.52381, 0.595238 )
+frames = SubResource( 1 )
+animation = "rotate"
+frame = 1
+playing = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 3 )
+anims/bounce = SubResource( 4 )
+
+[node name="CoinCollected" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[connection signal="body_entered" from="." to="." method="_on_Coin_body_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

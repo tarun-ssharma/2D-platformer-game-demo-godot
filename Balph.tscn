@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://balph_frames.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Balph.gd" type="Script" id=2]
+[ext_resource path="res://assets/sounds/jump1.ogg" type="AudioStream" id=3]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 21.0
+height = 48.0
+
+[node name="Balph" type="KinematicBody2D"]
+position = Vector2( 165, 102 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+frames = ExtResource( 1 )
+animation = "idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 2, 10 )
+shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="SoundJump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+volume_db = -45.81
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
